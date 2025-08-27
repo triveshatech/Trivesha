@@ -1,0 +1,24 @@
+# Ignore unnecessary files for Vercel deployment
+
+node_modules
+.env*
+.git
+.gitignore
+README.md
+*.md
+
+# Ignore development files
+
+server.js
+scripts/
+uploads/
+.vscode/
+_.log
+_.lock
+
+# Keep only essential files for serverless functions
+
+!api/
+!package.json
+!vercel.json
+!config.env

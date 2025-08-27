@@ -1,20 +1,21 @@
 {
   "version": 2,
-  "builds": [
-    {
-      "src": "api/index.js",
-      "use": "@vercel/node"
-    }
-  ],
-  "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "/api/index.js"
-    }
-  ],
+  "outputDirectory": "dist",
+  "buildCommand": "echo 'No build needed'",
   "functions": {
-    "api/index.js": {
-      "maxDuration": 10
+    "api/*.js": {
+      "runtime": "nodejs18.x",
+      "maxDuration": 30
     }
-  }
+  },
+  "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": "/api/$1"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/api/index"
+    }
+  ]
 }

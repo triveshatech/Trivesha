@@ -1,6 +1,6 @@
-// This is the main serverless function for Vercel
-export default async function handler(req, res) {
-  // Set CORS headers
+// Super simple Vercel serverless function
+export default function handler(req, res) {
+  // Enable CORS
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader(
     "Access-Control-Allow-Methods",
@@ -8,96 +8,90 @@ export default async function handler(req, res) {
   );
   res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
 
-  // Handle preflight requests
   if (req.method === "OPTIONS") {
     return res.status(200).end();
   }
 
+  const { url, method } = req;
+
   try {
-    const { url, method } = req;
-
-    console.log(`Request: ${method} ${url}`);
-
-    // Parse the URL to get the path
-    const urlObj = new URL(url, `http://${req.headers.host}`);
-    const pathname = urlObj.pathname;
-
     // Root endpoint
-    if (pathname === "/" || pathname === "") {
+    if (url === "/" || url === "") {
       return res.status(200).json({
         success: true,
-        message: "Trivedia Flow Backend API is running",
+        message: "Trivedia Flow Backend API",
         version: "1.0.0",
         platform: "vercel",
         timestamp: new Date().toISOString(),
-        method,
-        pathname,
       });
     }
 
-    // Health check endpoint
-    if (pathname === "/api/health") {
+    // Health endpoint
+    if (url === "/api/health") {
       return res.status(200).json({
         success: true,
         message: "API is healthy",
         timestamp: new Date().toISOString(),
         server: "vercel",
         nodeVersion: process.version,
-        environment: process.env.NODE_ENV || "production",
       });
     }
 
     // Debug endpoint
-    if (pathname === "/api/debug") {
+    if (url === "/api/debug") {
       return res.status(200).json({
         success: true,
-        message: "Debug information",
         environment: process.env.NODE_ENV || "production",
         hasMongoUri: !!process.env.MONGODB_URI,
         hasJwtSecret: !!process.env.JWT_SECRET,
-        hasCloudinaryName: !!process.env.CLOUDINARY_CLOUD_NAME,
         nodeVersion: process.version,
         timestamp: new Date().toISOString(),
-        envVarsCount: Object.keys(process.env).length,
       });
     }
 
     // Test endpoint
-    if (pathname === "/api/test") {
+    if (url === "/api/test") {
       return res.status(200).json({
         success: true,
-        message: "Test endpoint working perfectly",
+        message: "Test endpoint working",
         timestamp: new Date().toISOString(),
         method,
-        pathname,
+        url,
       });
     }
 
-    // Simple ping
-    if (pathname === "/ping") {
+    // Contact endpoint
+    if (url === "/api/contact" && method === "POST") {
+      const { name, email, message } = req.body || {};
+
+      if (!name || !email || !message) {
+        return res.status(400).json({
+          success: false,
+          message: "All fields are required",
+        });
+      }
+
       return res.status(200).json({
         success: true,
-        message: "pong",
+        message: "Message received successfully",
+        data: { name, email, message },
         timestamp: new Date().toISOString(),
       });
     }
 
-    // 404 for all other routes
+    // 404 for other routes
     return res.status(404).json({
       success: false,
       message: "Route not found",
-      path: pathname,
+      path: url,
       method,
-      timestamp: new Date().toISOString(),
     });
   } catch (error) {
-    console.error("Handler Error:", error);
+    console.error("Error:", error);
     return res.status(500).json({
       success: false,
       message: "Internal server error",
       error: error.message,
-      stack: process.env.NODE_ENV === "development" ? error.stack : undefined,
-      timestamp: new Date().toISOString(),
     });
   }
 }

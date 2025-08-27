@@ -1,7 +1,6 @@
 import express from "express";
 import multer from "multer";
 import path from "path";
-import fs from "fs";
 import dotenv from "dotenv";
 import { v2 as cloudinary } from "cloudinary";
 import { protect, authorize } from "../middleware/auth.js";
@@ -11,12 +10,6 @@ dotenv.config({ path: "./config.env" });
 
 const router = express.Router();
 
-// Create uploads directory if it doesn't exist
-const uploadsDir = path.join(process.cwd(), "uploads");
-if (!fs.existsSync(uploadsDir)) {
-  fs.mkdirSync(uploadsDir, { recursive: true });
-}
-
 // Configure Cloudinary
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -24,18 +17,8 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-// Configure multer for file uploads
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, uploadsDir);
-  },
-  filename: (req, file, cb) => {
-    // Generate unique filename with timestamp
-    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
-    const ext = path.extname(file.originalname);
-    cb(null, file.fieldname + "-" + uniqueSuffix + ext);
-  },
-});
+// Configure multer for memory storage (Vercel compatible)
+const storage = multer.memoryStorage();
 
 // File filter function
 const fileFilter = (req, file, cb) => {
@@ -73,22 +56,22 @@ router.post(
         });
       }
 
-      // Upload to Cloudinary
-      const uploadResult = await cloudinary.uploader.upload(req.file.path, {
-        folder: "trivedia-flow",
-        resource_type: "image",
-      });
-
-      // Clean up local file
-      try {
-        fs.unlinkSync(req.file.path);
-      } catch (e) {}
+      // Upload buffer directly to Cloudinary (Vercel compatible)
+      const uploadResult = await cloudinary.uploader.upload(
+        `data:${req.file.mimetype};base64,${req.file.buffer.toString(
+          "base64"
+        )}`,
+        {
+          folder: "trivedia-flow",
+          resource_type: "image",
+        }
+      );
 
       res.json({
         success: true,
         message: "File uploaded successfully",
         data: {
-          filename: req.file.filename,
+          filename: req.file.originalname,
           originalName: req.file.originalname,
           mimetype: req.file.mimetype,
           size: req.file.size,
@@ -102,13 +85,6 @@ router.post(
       // Log error for debugging (only in development)
       if (process.env.NODE_ENV === "development") {
         console.error("Upload error:", error.message);
-      }
-
-      // Clean up local file if it exists
-      if (req.file && req.file.path) {
-        try {
-          fs.unlinkSync(req.file.path);
-        } catch (e) {}
       }
 
       res.status(500).json({
@@ -138,15 +114,15 @@ router.post(
       }
 
       const uploadPromises = req.files.map(async (file) => {
-        const result = await cloudinary.uploader.upload(file.path, {
-          folder: "trivedia-flow",
-          resource_type: "image",
-        });
-        try {
-          fs.unlinkSync(file.path);
-        } catch (e) {}
+        const result = await cloudinary.uploader.upload(
+          `data:${file.mimetype};base64,${file.buffer.toString("base64")}`,
+          {
+            folder: "trivedia-flow",
+            resource_type: "image",
+          }
+        );
         return {
-          filename: file.filename,
+          filename: file.originalname,
           originalName: file.originalname,
           mimetype: file.mimetype,
           size: file.size,
@@ -177,33 +153,31 @@ router.post(
   }
 );
 
-// @desc    Delete uploaded file
-// @route   DELETE /api/upload/:filename
+// @desc    Delete uploaded file from Cloudinary
+// @route   DELETE /api/upload/:publicId
 // @access  Private (Admin/Editor)
 router.delete(
-  "/:filename",
+  "/:publicId",
   protect,
   authorize("admin", "editor"),
   async (req, res) => {
     try {
-      const { filename } = req.params;
-      const filePath = path.join(uploadsDir, filename);
+      const { publicId } = req.params;
 
-      // Check if file exists
-      if (!fs.existsSync(filePath)) {
-        return res.status(404).json({
+      // Delete from Cloudinary
+      const result = await cloudinary.uploader.destroy(publicId);
+
+      if (result.result === "ok") {
+        res.json({
+          success: true,
+          message: "File deleted successfully",
+        });
+      } else {
+        res.status(404).json({
           success: false,
           message: "File not found",
         });
       }
-
-      // Delete file
-      fs.unlinkSync(filePath);
-
-      res.json({
-        success: true,
-        message: "File deleted successfully",
-      });
     } catch (error) {
       console.error("Delete file error:", error);
       res.status(500).json({
@@ -214,7 +188,7 @@ router.delete(
   }
 );
 
-// @desc    Get list of uploaded files
+// @desc    Get list of uploaded files from Cloudinary
 // @route   GET /api/upload/files
 // @access  Private (Admin/Editor)
 router.get(
@@ -225,33 +199,25 @@ router.get(
     try {
       const page = parseInt(req.query.page) || 1;
       const limit = parseInt(req.query.limit) || 20;
-      const skip = (page - 1) * limit;
 
-      // Read files from uploads directory
-      const files = fs
-        .readdirSync(uploadsDir)
-        .filter((file) => {
-          const ext = path.extname(file).toLowerCase();
-          return [".jpg", ".jpeg", ".png", ".gif", ".webp"].includes(ext);
-        })
-        .map((filename) => {
-          const filePath = path.join(uploadsDir, filename);
-          const stats = fs.statSync(filePath);
-          return {
-            filename,
-            url: `/uploads/${filename}`,
-            size: stats.size,
-            createdAt: stats.birthtime,
-            modifiedAt: stats.mtime,
-          };
-        })
-        .sort((a, b) => b.createdAt - a.createdAt)
-        .slice(skip, skip + limit);
+      // Get files from Cloudinary
+      const result = await cloudinary.search
+        .expression("folder:trivedia-flow")
+        .sort_by([["created_at", "desc"]])
+        .max_results(limit)
+        .next_cursor((page - 1) * limit)
+        .execute();
 
-      const total = fs.readdirSync(uploadsDir).filter((file) => {
-        const ext = path.extname(file).toLowerCase();
-        return [".jpg", ".jpeg", ".png", ".gif", ".webp"].includes(ext);
-      }).length;
+      const files = result.resources.map((file) => ({
+        publicId: file.public_id,
+        filename: file.display_name || file.public_id,
+        url: file.secure_url,
+        size: file.bytes,
+        width: file.width,
+        height: file.height,
+        format: file.format,
+        createdAt: file.created_at,
+      }));
 
       res.json({
         success: true,
@@ -260,8 +226,8 @@ router.get(
           pagination: {
             page,
             limit,
-            total,
-            pages: Math.ceil(total / limit),
+            total: result.total_count,
+            pages: Math.ceil(result.total_count / limit),
           },
         },
       });

@@ -7,21 +7,8 @@ import cookieParser from "cookie-parser";
 import rateLimit from "express-rate-limit";
 import dotenv from "dotenv";
 
-// Import routes
-import authRoutes from "./routes/auth.js";
-import adminRoutes from "./routes/admin.js";
-import contentRoutes from "./routes/content.js";
-import uploadRoutes from "./routes/upload.js";
-import portfolioRoutes from "./routes/portfolio.js";
-import pricingRoutes from "./routes/pricing.js";
-import contactRoutes from "./routes/contact.js";
-
-// Import middleware
-import { errorHandler } from "./middleware/errorHandler.js";
-import { notFound } from "./middleware/notFound.js";
-
 // Load environment variables
-dotenv.config({ path: "./config.env" });
+dotenv.config({ path: "../config.env" });
 
 const app = express();
 
@@ -34,49 +21,60 @@ const connectDB = async () => {
     return connectionPromise;
   }
 
-  connectionPromise = mongoose.connect(process.env.MONGODB_URI, {
-    serverSelectionTimeoutMS: 5000,
-    socketTimeoutMS: 45000,
-    bufferCommands: false,
-    bufferMaxEntries: 0,
-  });
+  if (mongoose.connections[0].readyState) {
+    return mongoose.connections[0];
+  }
 
   try {
+    connectionPromise = mongoose.connect(process.env.MONGODB_URI, {
+      serverSelectionTimeoutMS: 5000,
+      socketTimeoutMS: 45000,
+      bufferCommands: false,
+      bufferMaxEntries: 0,
+    });
+
     await connectionPromise;
     console.log("MongoDB Connected");
+    return connectionPromise;
   } catch (error) {
     console.error("MongoDB connection error:", error.message);
     connectionPromise = null;
     throw error;
   }
-
-  return connectionPromise;
 };
 
 // Security middleware
-app.use(
-  helmet({
-    crossOriginEmbedderPolicy: false,
-    contentSecurityPolicy: {
-      directives: {
-        defaultSrc: ["'self'"],
-        styleSrc: ["'self'", "'unsafe-inline'"],
-        scriptSrc: ["'self'"],
-        imgSrc: ["'self'", "data:", "https:"],
+try {
+  app.use(
+    helmet({
+      crossOriginEmbedderPolicy: false,
+      contentSecurityPolicy: {
+        directives: {
+          defaultSrc: ["'self'"],
+          styleSrc: ["'self'", "'unsafe-inline'"],
+          scriptSrc: ["'self'"],
+          imgSrc: ["'self'", "data:", "https:"],
+        },
       },
-    },
-  })
-);
+    })
+  );
+} catch (error) {
+  console.error("Helmet middleware error:", error);
+}
 
 // Rate limiting
-const limiter = rateLimit({
-  windowMs: parseInt(process.env.RATE_LIMIT_WINDOW_MS) || 15 * 60 * 1000,
-  max: parseInt(process.env.RATE_LIMIT_MAX_REQUESTS) || 1000,
-  message: "Too many requests from this IP, please try again later.",
-  standardHeaders: true,
-  legacyHeaders: false,
-});
-app.use("/api/", limiter);
+try {
+  const limiter = rateLimit({
+    windowMs: parseInt(process.env.RATE_LIMIT_WINDOW_MS) || 15 * 60 * 1000,
+    max: parseInt(process.env.RATE_LIMIT_MAX_REQUESTS) || 1000,
+    message: "Too many requests from this IP, please try again later.",
+    standardHeaders: true,
+    legacyHeaders: false,
+  });
+  app.use("/api/", limiter);
+} catch (error) {
+  console.error("Rate limiter error:", error);
+}
 
 // CORS configuration
 app.use(
@@ -101,6 +99,17 @@ app.use(cookieParser());
 // Compression middleware
 app.use(compression());
 
+// Root endpoint
+app.get("/", (req, res) => {
+  res.status(200).json({
+    success: true,
+    message: "Trivedia Flow API is running",
+    version: "1.0.0",
+    platform: "vercel",
+    timestamp: new Date().toISOString(),
+  });
+});
+
 // Health check endpoint
 app.get("/api/health", async (req, res) => {
   try {
@@ -117,6 +126,7 @@ app.get("/api/health", async (req, res) => {
       success: false,
       message: "Database connection failed",
       error: error.message,
+      timestamp: new Date().toISOString(),
     });
   }
 });
@@ -131,16 +141,7 @@ app.get("/api/debug", (req, res) => {
     hasMongoUri: !!process.env.MONGODB_URI,
     hasJwtSecret: !!process.env.JWT_SECRET,
     platform: "vercel",
-  });
-});
-
-// Root endpoint
-app.get("/", (req, res) => {
-  res.status(200).json({
-    success: true,
-    message: "Trivedia Flow API is running",
-    version: "1.0.0",
-    platform: "vercel",
+    nodeVersion: process.version,
   });
 });
 
@@ -158,6 +159,31 @@ app.use(async (req, res, next) => {
     });
   }
 });
+
+// Load routes with error handling
+try {
+  const { default: authRoutes } = await import("../routes/auth.js");
+  const { default: adminRoutes } = await import("../routes/admin.js");
+  const { default: contentRoutes } = await import("../routes/content.js");
+  const { default: uploadRoutes } = await import("../routes/upload.js");
+  const { default: portfolioRoutes } = await import("../routes/portfolio.js");
+  const { default: pricingRoutes } = await import("../routes/pricing.js");
+  const { default: contactRoutes } = await import("../routes/contact.js");
+
+  // API routes
+  app.use("/api/auth", authRoutes);
+  app.use("/api/admin", adminRoutes);
+  app.use("/api/content", contentRoutes);
+  app.use("/api/upload", uploadRoutes);
+  app.use("/api/portfolio", portfolioRoutes);
+  app.use("/api/pricing", pricingRoutes);
+  app.use("/api/contact", contactRoutes);
+
+  console.log("Routes loaded successfully");
+} catch (error) {
+  console.error("Error loading routes:", error.message);
+  // Still continue with basic endpoints
+}
 
 // API routes
 app.use("/api/auth", authRoutes);

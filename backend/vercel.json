@@ -1,0 +1,20 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "api/minimal.js",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "/api/minimal.js"
+    }
+  ],
+  "functions": {
+    "api/minimal.js": {
+      "maxDuration": 30
+    }
+  }
+}

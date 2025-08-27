@@ -65,6 +65,7 @@ app.use(
       "http://localhost:8080",
       "http://localhost:8081",
       "http://localhost:3000",
+      "https://trivesha.tech",
     ],
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],

@@ -1,96 +1,53 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trivesha - Coming Soon</title>
-    <link rel="stylesheet" href="styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-</head>
-<body>
-    <div class="container">
-        <div class="background-animation">
-            <div class="circle"></div>
-            <div class="circle"></div>
-            <div class="circle"></div>
-            <div class="circle"></div>
-            <div class="circle"></div>
-        </div>
-        
-        <header>
-            <div class="logo">
-                <h1>Trivesha</h1>
-            </div>
-        </header>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Trivesha - Web Design & Development Agency</title>
+    <meta
+      name="description"
+      content="Trivesha builds fast, beautiful websites, apps, and cloud backends. Get design, development, and maintenance from one expert team."
+    />
+    <meta name="author" content="Trivesha" />
+    <link rel="canonical" href="/" />
 
-        <main class="content">
-            <div class="coming-soon">
-                <h2>Something Amazing is Coming Soon</h2>
-                <p class="subtitle">We're working hard to bring you an incredible experience. Stay tuned!</p>
-                
-                <div class="countdown" id="countdown">
-                    <div class="time-unit">
-                        <span class="number" id="days">00</span>
-                        <span class="label">Days</span>
-                    </div>
-                    <div class="time-unit">
-                        <span class="number" id="hours">00</span>
-                        <span class="label">Hours</span>
-                    </div>
-                    <div class="time-unit">
-                        <span class="number" id="minutes">00</span>
-                        <span class="label">Minutes</span>
-                    </div>
-                    <div class="time-unit">
-                        <span class="number" id="seconds">00</span>
-                        <span class="label">Seconds</span>
-                    </div>
-                </div>
+    <meta
+      property="og:title"
+      content="Trivesha - Web Design & Development Agency"
+    />
+    <meta
+      property="og:description"
+      content="Web design, development, apps, DevOps, and maintenance. Since 2019."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="/favicon.ico" />
 
-                <div class="notify-section">
-                    <h3>Get Notified When We Launch</h3>
-                    <form class="notify-form" id="notifyForm">
-                        <input type="email" placeholder="Enter your email address" required>
-                        <button type="submit">
-                            <i class="fas fa-bell"></i>
-                            Notify Me
-                        </button>
-                    </form>
-                    <p class="privacy-note">We respect your privacy. No spam, ever.</p>
-                </div>
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@trivesha" />
+    <meta name="twitter:image" content="/favicon.ico" />
 
-                <div class="features">
-                    <div class="feature">
-                        <i class="fas fa-rocket"></i>
-                        <h4>Innovative Solutions</h4>
-                        <p>Cutting-edge technology meets creative design</p>
-                    </div>
-                    <div class="feature">
-                        <i class="fas fa-users"></i>
-                        <h4>Expert Team</h4>
-                        <p>Talented professionals dedicated to excellence</p>
-                    </div>
-                    <div class="feature">
-                        <i class="fas fa-star"></i>
-                        <h4>Premium Quality</h4>
-                        <p>Delivering exceptional results every time</p>
-                    </div>
-                </div>
-            </div>
-        </main>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+    />
+  </head>
 
-        <footer>
-            <div class="social-links">
-                <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
-                <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
-                <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
-                <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-            </div>
-            <p>&copy; 2025 Trivesha. All rights reserved.</p>
-        </footer>
-    </div>
-
-    <script src="script.js"></script>
-</body>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/wow/1.1.2/wow.min.js"></script>
+    <script>
+      new WOW().init();
+    </script>
+  </body>
 </html>

@@ -1,0 +1,329 @@
+/* Interactive Particles & Light Effects */
+
+/* Interactive particles that respond to hover */
+.interactive-particle {
+  position: relative;
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.interactive-particle:hover {
+  transform: scale(1.5);
+  animation-play-state: paused;
+  z-index: 10;
+}
+
+.interactive-particle::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 300%;
+  height: 300%;
+  background: radial-gradient(circle, rgba(45,212,191,0.4) 0%, rgba(45,212,191,0.2) 30%, transparent 70%);
+  border-radius: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  transition: transform 0.6s ease-out;
+  pointer-events: none;
+}
+
+.interactive-particle:hover::before {
+  transform: translate(-50%, -50%) scale(1);
+}
+
+/* Add ripple effect on click */
+.interactive-particle::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 500%;
+  height: 500%;
+  background: radial-gradient(circle, transparent 40%, rgba(45,212,191,0.1) 50%, transparent 70%);
+  border-radius: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  transition: transform 0.8s ease-out;
+  pointer-events: none;
+  opacity: 0;
+}
+
+.interactive-particle:active::after {
+  transform: translate(-50%, -50%) scale(1);
+  opacity: 1;
+}
+
+/* Sparkle animation for light effects */
+@keyframes sparkle {
+  0%, 100% {
+    opacity: 0.3;
+    transform: scale(1) rotate(0deg);
+    filter: brightness(1);
+  }
+  25% {
+    opacity: 0.7;
+    transform: scale(1.1) rotate(90deg);
+    filter: brightness(1.3);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.2) rotate(180deg);
+    filter: brightness(1.5);
+  }
+  75% {
+    opacity: 0.7;
+    transform: scale(1.1) rotate(270deg);
+    filter: brightness(1.3);
+  }
+}
+
+/* Enhanced glow animation */
+@keyframes enhanced-glow {
+  0%, 100% {
+    box-shadow: 
+      0 0 5px rgba(45,212,191,0.4),
+      0 0 10px rgba(45,212,191,0.3),
+      0 0 15px rgba(45,212,191,0.2);
+    filter: brightness(1);
+  }
+  50% {
+    box-shadow: 
+      0 0 15px rgba(45,212,191,0.8),
+      0 0 25px rgba(45,212,191,0.6),
+      0 0 35px rgba(45,212,191,0.4),
+      0 0 45px rgba(45,212,191,0.2);
+    filter: brightness(1.4);
+  }
+}
+
+/* Floating animation with light trail */
+@keyframes float-with-trail {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+    filter: brightness(1) blur(0px);
+  }
+  25% {
+    transform: translateY(-12px) rotate(90deg);
+    filter: brightness(1.3) blur(0.5px);
+  }
+  50% {
+    transform: translateY(-8px) rotate(180deg);
+    filter: brightness(1.6) blur(1px);
+  }
+  75% {
+    transform: translateY(-16px) rotate(270deg);
+    filter: brightness(1.3) blur(0.5px);
+  }
+}
+
+/* Pulse with light expansion */
+@keyframes pulse-light {
+  0% {
+    opacity: 0.4;
+    transform: scale(1);
+    box-shadow: 0 0 5px rgba(45,212,191,0.3);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.15);
+    box-shadow: 
+      0 0 20px rgba(45,212,191,0.8),
+      0 0 30px rgba(45,212,191,0.6),
+      0 0 40px rgba(45,212,191,0.4),
+      0 0 50px rgba(45,212,191,0.2);
+  }
+  100% {
+    opacity: 0.4;
+    transform: scale(1);
+    box-shadow: 0 0 5px rgba(45,212,191,0.3);
+  }
+}
+
+/* Shooting star effect */
+@keyframes shooting-star {
+  0% {
+    transform: translateX(-100px) translateY(100px) scale(0);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+    transform: translateX(-50px) translateY(50px) scale(1);
+  }
+  90% {
+    opacity: 1;
+    transform: translateX(50px) translateY(-50px) scale(1);
+  }
+  100% {
+    transform: translateX(100px) translateY(-100px) scale(0);
+    opacity: 0;
+  }
+}
+
+/* Orbit animation */
+@keyframes orbit {
+  0% {
+    transform: rotate(0deg) translateX(20px) rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg) translateX(20px) rotate(-360deg);
+  }
+}
+
+/* Apply enhanced animations to specific particles */
+.interactive-particle:nth-child(1) {
+  animation: enhanced-glow 3s ease-in-out infinite;
+}
+
+.interactive-particle:nth-child(3) {
+  animation: float-with-trail 4s ease-in-out infinite;
+}
+
+.interactive-particle:nth-child(5) {
+  animation: pulse-light 2.5s ease-in-out infinite;
+}
+
+.interactive-particle:nth-child(7) {
+  animation: sparkle 2s ease-in-out infinite;
+}
+
+.interactive-particle:nth-child(15) {
+  animation: enhanced-glow 3.5s ease-in-out infinite;
+}
+
+.interactive-particle:nth-child(17) {
+  animation: float-with-trail 5s ease-in-out infinite;
+}
+
+/* Light ray animations */
+@keyframes light-ray-flow {
+  0% {
+    opacity: 0;
+    transform: translateY(-100%);
+  }
+  50% {
+    opacity: 0.8;
+    transform: translateY(0%);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(100%);
+  }
+}
+
+/* Section hover effect - more particles appear and intensify */
+.cta-section:hover .interactive-particle {
+  animation-duration: 0.6s !important;
+}
+
+.cta-section:hover .interactive-particle:not(:hover) {
+  opacity: 0.7;
+}
+
+.cta-section .interactive-particle:hover {
+  opacity: 1;
+  z-index: 20;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .interactive-particle {
+    transform: scale(0.8);
+  }
+  
+  .interactive-particle:hover {
+    transform: scale(1.2);
+  }
+}
+
+/* Add shimmer effect to larger particles */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.interactive-particle.large {
+  position: relative;
+  overflow: hidden;
+}
+
+.interactive-particle.large::before {
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(45,212,191,0.6),
+    transparent
+  );
+  background-size: 200% 100%;
+  animation: shimmer 3s infinite, enhanced-glow 2s ease-in-out infinite;
+}
+
+/* Constellation connection lines */
+@keyframes constellation-line {
+  0%, 100% {
+    stroke-dasharray: 0 100;
+    opacity: 0;
+  }
+  50% {
+    stroke-dasharray: 50 100;
+    opacity: 0.4;
+  }
+}
+
+/* Add mouse follow effect */
+.cta-section {
+  position: relative;
+  --mouse-x: 50%;
+  --mouse-y: 50%;
+  --mouse-opacity: 0;
+}
+
+.cta-section::before {
+  content: '';
+  position: absolute;
+  top: var(--mouse-y);
+  left: var(--mouse-x);
+  width: 150px;
+  height: 150px;
+  background: radial-gradient(circle, rgba(45,212,191,0.2) 0%, rgba(45,212,191,0.1) 40%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+  opacity: var(--mouse-opacity);
+  transition: opacity 0.3s ease;
+  transform: translate(-50%, -50%);
+  z-index: 1;
+}
+
+/* Twinkle effect for white sparkles */
+@keyframes twinkle {
+  0%, 100% {
+    opacity: 0.2;
+    transform: scale(0.8);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.2);
+  }
+}
+
+/* Add class for white sparkles */
+.sparkle-white {
+  animation: twinkle 1.5s ease-in-out infinite !important;
+}
+
+/* Enhance the light rays */
+@keyframes light-ray-vertical {
+  0% {
+    opacity: 0;
+    transform: scaleY(0);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scaleY(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scaleY(0);
+  }
+}

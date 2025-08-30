@@ -1,0 +1,420 @@
+/* Contact Page Stars & Patterns */
+
+/* Cute minimal stars that appear throughout the page */
+.contact-stars {
+  position: relative;
+  overflow: hidden;
+}
+
+.contact-stars::before,
+.contact-stars::after {
+  content: '';
+  position: absolute;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Floating stars background */
+.floating-stars {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Individual star styles */
+.star {
+  position: absolute;
+  background: white;
+  clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+  animation: enhanced-twinkle 4s ease-in-out infinite;
+  opacity: 0.7;
+  cursor: default;
+  transition: all 0.3s ease;
+}
+
+.star.small {
+  width: 10px;
+  height: 10px;
+  animation: twinkle 3s ease-in-out infinite;
+}
+
+.star.medium {
+  width: 14px;
+  height: 14px;
+  animation: enhanced-twinkle 3.5s ease-in-out infinite;
+}
+
+.star.large {
+  width: 18px;
+  height: 18px;
+  animation: enhanced-twinkle 4s ease-in-out infinite;
+}
+
+.star.tiny {
+  width: 6px;
+  height: 6px;
+  animation: twinkle 2.5s ease-in-out infinite;
+  opacity: 0.5;
+}
+
+/* Twinkle animation */
+@keyframes twinkle {
+  0%, 100% {
+    opacity: 0.4;
+    transform: scale(0.8) rotate(0deg);
+    filter: brightness(1);
+  }
+  25% {
+    opacity: 0.8;
+    transform: scale(1.1) rotate(90deg);
+    filter: brightness(1.2);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.3) rotate(180deg);
+    filter: brightness(1.5);
+  }
+  75% {
+    opacity: 0.8;
+    transform: scale(1.1) rotate(270deg);
+    filter: brightness(1.2);
+  }
+}
+
+/* Enhanced twinkle for more noticeable effect */
+@keyframes enhanced-twinkle {
+  0%, 100% {
+    opacity: 0.5;
+    transform: scale(0.9) rotate(0deg);
+    filter: brightness(1) drop-shadow(0 0 2px currentColor);
+  }
+  20% {
+    opacity: 0.9;
+    transform: scale(1.2) rotate(72deg);
+    filter: brightness(1.3) drop-shadow(0 0 4px currentColor);
+  }
+  40% {
+    opacity: 1;
+    transform: scale(1.4) rotate(144deg);
+    filter: brightness(1.6) drop-shadow(0 0 6px currentColor);
+  }
+  60% {
+    opacity: 0.9;
+    transform: scale(1.2) rotate(216deg);
+    filter: brightness(1.3) drop-shadow(0 0 4px currentColor);
+  }
+  80% {
+    opacity: 0.7;
+    transform: scale(1.1) rotate(288deg);
+    filter: brightness(1.1) drop-shadow(0 0 3px currentColor);
+  }
+}
+
+/* Delayed twinkle for variety */
+.star:nth-child(2n) {
+  animation-delay: 0.8s;
+}
+
+.star:nth-child(3n) {
+  animation-delay: 1.6s;
+}
+
+.star:nth-child(4n) {
+  animation-delay: 2.4s;
+}
+
+.star:nth-child(5n) {
+  animation-delay: 3.2s;
+}
+
+.star:nth-child(6n) {
+  animation-delay: 0.4s;
+}
+
+.star:nth-child(7n) {
+  animation-delay: 1.2s;
+}
+
+/* Make some stars more prominent */
+.star:nth-child(3n+1) {
+  animation: enhanced-twinkle 3s ease-in-out infinite, star-bounce 6s ease-in-out infinite;
+}
+
+/* Star bounce animation */
+@keyframes star-bounce {
+  0%, 100% {
+    transform: translateY(0px) scale(1);
+  }
+  50% {
+    transform: translateY(-8px) scale(1.1);
+  }
+}
+
+/* Teal colored stars for variety */
+.star.teal {
+  background: #2DD4BF;
+  opacity: 0.8;
+  filter: drop-shadow(0 0 4px rgba(45, 212, 191, 0.6));
+}
+
+.star.blue {
+  background: #3B82F6;
+  opacity: 0.7;
+  filter: drop-shadow(0 0 4px rgba(59, 130, 246, 0.6));
+}
+
+.star.white {
+  background: #FFFFFF;
+  opacity: 0.9;
+  filter: drop-shadow(0 0 3px rgba(255, 255, 255, 0.7));
+}
+
+/* Simple geometric patterns */
+.geometric-pattern {
+  position: absolute;
+  border: 1px solid rgba(45, 212, 191, 0.4);
+  pointer-events: none;
+  animation: rotate-slow 20s linear infinite;
+  opacity: 0.6;
+}
+
+.geometric-pattern.triangle {
+  width: 0;
+  height: 0;
+  border-left: 18px solid transparent;
+  border-right: 18px solid transparent;
+  border-bottom: 30px solid rgba(45, 212, 191, 0.25);
+  border-radius: 3px;
+  filter: drop-shadow(0 0 3px rgba(45, 212, 191, 0.4));
+}
+
+.geometric-pattern.diamond {
+  width: 24px;
+  height: 24px;
+  background: rgba(59, 130, 246, 0.2);
+  transform: rotate(45deg);
+  border-radius: 3px;
+  border: 2px solid rgba(59, 130, 246, 0.4);
+  filter: drop-shadow(0 0 4px rgba(59, 130, 246, 0.3));
+}
+
+.geometric-pattern.circle {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: rgba(45, 212, 191, 0.15);
+  border: 2px solid rgba(45, 212, 191, 0.4);
+  filter: drop-shadow(0 0 5px rgba(45, 212, 191, 0.3));
+}
+
+/* Slow rotation animation */
+@keyframes rotate-slow {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Floating animation for patterns */
+@keyframes float-pattern {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-15px);
+  }
+}
+
+.geometric-pattern.floating {
+  animation: float-pattern 6s ease-in-out infinite;
+}
+
+/* Cute constellation lines */
+.constellation-line {
+  position: absolute;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(45, 212, 191, 0.3), transparent);
+  pointer-events: none;
+  opacity: 0;
+  animation: constellation-appear 4s ease-in-out infinite;
+}
+
+@keyframes constellation-appear {
+  0%, 80%, 100% {
+    opacity: 0;
+  }
+  40% {
+    opacity: 1;
+  }
+}
+
+/* Section-specific star patterns */
+.hero-stars {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.form-stars {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.5;
+}
+
+/* Interactive stars that respond to hover */
+.interactive-star {
+  cursor: pointer;
+  pointer-events: auto;
+  transition: all 0.3s ease;
+}
+
+.interactive-star:hover {
+  transform: scale(1.5) rotate(180deg);
+  opacity: 1;
+  filter: drop-shadow(0 0 8px rgba(45, 212, 191, 0.8));
+}
+
+/* Shooting star effect */
+.shooting-star {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  background: white;
+  border-radius: 50%;
+  opacity: 0;
+  animation: shoot 3s ease-out infinite;
+}
+
+@keyframes shoot {
+  0% {
+    opacity: 1;
+    transform: translateX(-100px) translateY(100px) scale(0);
+  }
+  10% {
+    opacity: 1;
+    transform: translateX(-80px) translateY(80px) scale(1);
+  }
+  70% {
+    opacity: 1;
+    transform: translateX(80px) translateY(-80px) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(100px) translateY(-100px) scale(0);
+  }
+}
+
+.shooting-star::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 50px;
+  height: 1px;
+  background: linear-gradient(90deg, rgba(255,255,255,0.8), transparent);
+  transform: translateX(-50px) rotate(-45deg);
+}
+
+/* Cute sparkle effect around form elements */
+.form-section .star {
+  animation-duration: 2s;
+}
+
+.form-section .star.tiny {
+  width: 4px;
+  height: 4px;
+  opacity: 0.4;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .star.large {
+    width: 12px;
+    height: 12px;
+  }
+  
+  .star.medium {
+    width: 8px;
+    height: 8px;
+  }
+  
+  .star.small {
+    width: 6px;
+    height: 6px;
+  }
+  
+  .geometric-pattern {
+    transform: scale(0.8);
+  }
+}
+
+/* Connect stars with subtle lines */
+.star-connection {
+  position: absolute;
+  width: 1px;
+  background: linear-gradient(to bottom, transparent, rgba(45, 212, 191, 0.2), transparent);
+  pointer-events: none;
+  opacity: 0;
+  animation: connection-fade 6s ease-in-out infinite;
+}
+
+@keyframes connection-fade {
+  0%, 70%, 100% {
+    opacity: 0;
+  }
+  35% {
+    opacity: 0.6;
+  }
+}
+
+/* Magical dust effect */
+.magic-dust {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 50%;
+  pointer-events: none;
+  animation: dust-float 4s ease-in-out infinite;
+}
+
+@keyframes dust-float {
+  0%, 100% {
+    opacity: 0;
+    transform: translateY(20px) scale(0);
+  }
+  50% {
+    opacity: 1;
+    transform: translateY(-20px) scale(1);
+  }
+}
+
+/* Add glow effect to certain stars */
+.star.glowing {
+  filter: drop-shadow(0 0 6px rgba(45, 212, 191, 0.6));
+  animation: glow-pulse 2s ease-in-out infinite alternate;
+}
+
+@keyframes glow-pulse {
+  from {
+    filter: drop-shadow(0 0 6px rgba(45, 212, 191, 0.6));
+  }
+  to {
+    filter: drop-shadow(0 0 12px rgba(45, 212, 191, 0.9));
+  }
+}

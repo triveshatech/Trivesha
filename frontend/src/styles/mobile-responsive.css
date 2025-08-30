@@ -1,0 +1,211 @@
+/* Enhanced Mobile Responsive Styles */
+
+/* Better mobile grid layouts - ensure appropriate spacing */
+@media (max-width: 768px) {
+  /* Improved grid gaps for mobile */
+  .grid {
+    gap: 1rem !important;
+  }
+  
+  /* Better text sizing on mobile cards */
+  .service-card h3,
+  .project-card h3 {
+    font-size: 1rem;
+    line-height: 1.4;
+  }
+  
+  .service-card p,
+  .project-card p {
+    font-size: 0.875rem;
+    line-height: 1.5;
+  }
+  
+  /* Optimize mobile button layouts */
+  .mobile-button-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  
+  .mobile-button-row {
+    display: flex;
+    gap: 0.75rem;
+  }
+  
+  .mobile-button-row button {
+    flex: 1;
+  }
+  
+  /* Better mobile form layouts */
+  .mobile-form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+  
+  .mobile-form-full {
+    grid-column: 1 / -1;
+  }
+  
+  /* Improved mobile card layouts */
+  .mobile-card-2col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+  
+  .mobile-card-3col {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.75rem;
+  }
+  
+  /* Mobile-optimized testimonials */
+  .testimonial-mobile {
+    padding: 1rem;
+  }
+  
+  .testimonial-mobile p {
+    font-size: 0.875rem;
+    line-height: 1.5;
+    margin-bottom: 1rem;
+  }
+  
+  /* Better mobile stats layout */
+  .stats-mobile {
+    text-align: center;
+    padding: 0.5rem;
+  }
+  
+  .stats-mobile .stat-number {
+    font-size: 1.5rem;
+    font-weight: bold;
+  }
+  
+  .stats-mobile .stat-label {
+    font-size: 0.75rem;
+    color: #6b7280;
+  }
+  
+  /* Mobile footer improvements */
+  .footer-mobile-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+  }
+  
+  .footer-mobile-grid h3 {
+    font-size: 1rem;
+    margin-bottom: 0.75rem;
+  }
+  
+  .footer-mobile-grid ul {
+    font-size: 0.875rem;
+  }
+  
+  .footer-mobile-grid .social-icons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+  }
+  
+  /* Mobile hero improvements */
+  .hero-mobile-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    width: 100%;
+  }
+  
+  @media (min-width: 480px) {
+    .hero-mobile-buttons {
+      flex-direction: row;
+    }
+    
+    .hero-mobile-buttons button {
+      flex: 1;
+    }
+  }
+}
+
+/* Tablet responsive improvements */
+@media (min-width: 769px) and (max-width: 1024px) {
+  /* Ensure good spacing on tablets */
+  .grid {
+    gap: 1.5rem;
+  }
+  
+  /* Better tablet card layouts */
+  .tablet-card-2col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+  }
+}
+
+/* Utilities for better mobile layouts */
+.mobile-2col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.mobile-3col {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.75rem;
+}
+
+.mobile-full-width {
+  width: 100%;
+}
+
+.mobile-flex-col {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.mobile-flex-row {
+  display: flex;
+  gap: 1rem;
+}
+
+@media (min-width: 640px) {
+  .mobile-flex-col {
+    flex-direction: row;
+  }
+  
+  .mobile-flex-col > * {
+    flex: 1;
+  }
+}
+
+/* Enhanced mobile-first approach */
+.container {
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+@media (min-width: 640px) {
+  .container {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+}
+
+/* Better mobile touch targets */
+@media (max-width: 768px) {
+  button,
+  .button {
+    min-height: 44px;
+    padding: 0.75rem 1rem;
+  }
+  
+  input,
+  select,
+  textarea {
+    min-height: 44px;
+    padding: 0.75rem;
+  }
+}

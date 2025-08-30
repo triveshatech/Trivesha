@@ -1,6 +1,5 @@
 import express from "express";
 import multer from "multer";
-import path from "path";
 import dotenv from "dotenv";
 import { v2 as cloudinary } from "cloudinary";
 import { protect, authorize } from "../middleware/auth.js";
@@ -17,7 +16,7 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-// Configure multer for memory storage (Vercel compatible)
+// Configure multer for file uploads - use memory storage for serverless
 const storage = multer.memoryStorage();
 
 // File filter function
@@ -56,16 +55,22 @@ router.post(
         });
       }
 
-      // Upload buffer directly to Cloudinary (Vercel compatible)
-      const uploadResult = await cloudinary.uploader.upload(
-        `data:${req.file.mimetype};base64,${req.file.buffer.toString(
-          "base64"
-        )}`,
-        {
-          folder: "trivedia-flow",
-          resource_type: "image",
-        }
-      );
+      // Upload to Cloudinary from buffer
+      const uploadResult = await new Promise((resolve, reject) => {
+        cloudinary.uploader.upload_stream(
+          {
+            folder: "trivedia-flow",
+            resource_type: "image",
+          },
+          (error, result) => {
+            if (error) {
+              reject(error);
+            } else {
+              resolve(result);
+            }
+          }
+        ).end(req.file.buffer);
+      });
 
       res.json({
         success: true,
@@ -114,13 +119,22 @@ router.post(
       }
 
       const uploadPromises = req.files.map(async (file) => {
-        const result = await cloudinary.uploader.upload(
-          `data:${file.mimetype};base64,${file.buffer.toString("base64")}`,
-          {
-            folder: "trivedia-flow",
-            resource_type: "image",
-          }
-        );
+        const result = await new Promise((resolve, reject) => {
+          cloudinary.uploader.upload_stream(
+            {
+              folder: "trivedia-flow",
+              resource_type: "image",
+            },
+            (error, result) => {
+              if (error) {
+                reject(error);
+              } else {
+                resolve(result);
+              }
+            }
+          ).end(file.buffer);
+        });
+
         return {
           filename: file.originalname,
           originalName: file.originalname,
@@ -163,11 +177,11 @@ router.delete(
   async (req, res) => {
     try {
       const { publicId } = req.params;
-
+      
       // Delete from Cloudinary
       const result = await cloudinary.uploader.destroy(publicId);
 
-      if (result.result === "ok") {
+      if (result.result === 'ok') {
         res.json({
           success: true,
           message: "File deleted successfully",
@@ -175,7 +189,7 @@ router.delete(
       } else {
         res.status(404).json({
           success: false,
-          message: "File not found",
+          message: "File not found or already deleted",
         });
       }
     } catch (error) {
@@ -202,21 +216,20 @@ router.get(
 
       // Get files from Cloudinary
       const result = await cloudinary.search
-        .expression("folder:trivedia-flow")
-        .sort_by([["created_at", "desc"]])
+        .expression('folder:trivedia-flow AND resource_type:image')
+        .sort_by([['created_at', 'desc']])
         .max_results(limit)
-        .next_cursor((page - 1) * limit)
         .execute();
 
-      const files = result.resources.map((file) => ({
-        publicId: file.public_id,
-        filename: file.display_name || file.public_id,
-        url: file.secure_url,
-        size: file.bytes,
-        width: file.width,
-        height: file.height,
-        format: file.format,
-        createdAt: file.created_at,
+      const files = result.resources.map((resource) => ({
+        publicId: resource.public_id,
+        filename: resource.display_name || resource.public_id.split('/').pop(),
+        url: resource.secure_url,
+        size: resource.bytes,
+        width: resource.width,
+        height: resource.height,
+        format: resource.format,
+        createdAt: resource.created_at,
       }));
 
       res.json({

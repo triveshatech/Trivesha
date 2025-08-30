@@ -7,10 +7,27 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-node_modules
-dist
-dist-ssr
-*.local
+# Dependencies
+node_modules/
+frontend/node_modules/
+backend/node_modules/
+
+# Build outputs
+dist/
+dist-ssr/
+frontend/dist/
+backend/dist/
+
+# Environment files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+frontend/.env
+backend/.env
+config.env
+config.en
 
 # Editor directories and files
 .vscode/*
@@ -23,7 +40,17 @@ dist-ssr
 *.sln
 *.sw?
 
+# Vercel
+.vercel/
+frontend/.vercel/
+backend/.vercel/
 
-.env
-config.env
-config.en
+# Package manager lock files
+*.local
+bun.lockb
+frontend/bun.lockb
+backend/bun.lockb
+
+# Backend specific
+backend/uploads/
+!backend/uploads/.gitkeep

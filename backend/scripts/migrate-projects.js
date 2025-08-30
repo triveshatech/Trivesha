@@ -3,12 +3,12 @@ import Project from "../models/Project.js";
 import dotenv from "dotenv";
 
 // Load environment variables
-dotenv.config({ path: "./config.env" });
+dotenv.config({ path: "./.env" });
 
 const migrateProjects = async () => {
   try {
     // Connect to MongoDB
-    await mongoose.connect(process.env.MONGO_URI);
+    await mongoose.connect(process.env.MONGODB_URI);
     console.log("🔌 Connected to MongoDB");
 
     // Get all existing projects

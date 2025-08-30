@@ -1,11 +1,11 @@
 // seed-pricing.js - Script to initialize default pricing plans
 import mongoose from "mongoose";
 import dotenv from "dotenv";
-import PricingPlan from "./models/PricingPlan.js";
-import User from "./models/User.js";
+import PricingPlan from "../models/PricingPlan.js";
+import User from "../models/User.js";
 
 // Load environment variables
-dotenv.config({ path: "./config.env" });
+dotenv.config({ path: "./.env" });
 
 // Connect to MongoDB
 const connectDB = async () => {

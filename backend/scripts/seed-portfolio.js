@@ -1,10 +1,10 @@
 import mongoose from "mongoose";
 import dotenv from "dotenv";
-import Project from "./models/Project.js";
-import User from "./models/User.js";
+import Project from "../models/Project.js";
+import User from "../models/User.js";
 
 // Load environment variables
-dotenv.config({ path: "./config.env" });
+dotenv.config({ path: "./.env" });
 
 const sampleProjects = [
   {
